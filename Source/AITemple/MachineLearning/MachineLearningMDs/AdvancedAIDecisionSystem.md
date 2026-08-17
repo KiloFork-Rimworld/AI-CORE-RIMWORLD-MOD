@@ -1,5 +1,0 @@
-The provided code is a part of a RimWorld mod, specifically an advanced AI decision system. The AdvancedAIDecisionSystem class is responsible for making strategic decisions based on the current state of the game.
-
-The MakeStrategicDecisions method is the main entry point for this decision-making process. It takes a Map object as a parameter, which represents the current state of the game world. This method checks for three conditions: low colonist count, presence of threats, and the need to adjust work priorities.
-
-If the number of free colonists is less than three, it calls the RecruitNewColonists method. This method attempts to recruit a prisoner to join the colonists. This is a strategic decision made by the AI to ensure that there are enough colonists to perform necessary tasks within the game.

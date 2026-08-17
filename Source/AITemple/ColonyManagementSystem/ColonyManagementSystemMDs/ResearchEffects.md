@@ -1,9 +1,0 @@
-The provided C# code is part of a mod for the game RimWorld. It defines two classes, `AIResearchHandler` and `ResearchEffects`, which handle the effects of completing research projects in the game.
-
-The `AIResearchHandler` class is a Harmony patch for the `ResearchManager` class's `FinishProject` method. Harmony is a library that allows for runtime detours, essentially allowing you to modify the behavior of existing code without modifying the code itself. The `Postfix` method in `AIResearchHandler` is executed after the `FinishProject` method. It checks if the completed project is one of two AI-related research projects, and if so, it calls the `ActivateAIFeatures` method.
-
-The `ActivateAIFeatures` method activates AI features based on the completed research project. If the project is "AIIntegrationBasics", it logs a message indicating that basic AI features are now available. If the project is "AdvancedAISystems", it logs a message indicating that advanced AI systems are now fully operational.
-
-The `ResearchEffects` class manages the effects of other types of research. It contains a dictionary mapping research IDs to actions. When the `ApplyResearchEffect` method is called with a research ID, it looks up the corresponding action in the dictionary and invokes it.
-
-The `ActivateHydroponics`, `ActivateSolarPanels`, and `EnhanceBaseDefense` methods are examples of such actions. They log messages indicating that hydroponics farming systems, solar panel energy production, and advanced defensive technologies have been activated, respectively. In a complete implementation, they would also contain the code to enable these features in the game.
