@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>AI Core: Field Triage</name>
+  <author>Kilo.Musician</author>
+  <packageId>kilomusician.aicore.fieldtriage</packageId>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <description>Small, standalone RimWorld 1.6 gameplay slice from the AI Enhanced Gameplay project. Adds two workbench bills for converting cloth and herbal medicine into more usable medical supplies, with an optional researched bulk process. Every extra treatment costs cloth, existing medicine, pawn work, and (for the bulk method) research. No C# assembly, AI provider, colonist autonomy, DLC, network access, or external framework is required. The wider AI Enhanced Gameplay project remains experimental.</description>
+</ModMetaData>
