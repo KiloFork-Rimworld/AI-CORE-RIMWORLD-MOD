@@ -1,0 +1,62 @@
+name: RimWorld first standalone mod source acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'Playable/AI-Core-Field-Triage/**'
+      - 'tools/verify_first_slice.py'
+      - 'tests/test_first_playable_mod.py'
+      - 'docs/FIRST_PLAYABLE_FIELD_TRIAGE.md'
+      - '.github/workflows/field-triage-mod.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  exact-source-xml-mod:
+    name: Recipe/research source contract and deterministic install package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pin exact source and Python syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          python -m py_compile tools/verify_first_slice.py tests/test_first_playable_mod.py
+      - name: Real negative fixture suite and source acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p test_first_playable_mod.py -v
+          python tools/verify_first_slice.py
+      - name: Build reproducible installable mod ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/verify_first_slice.py --out "$RUNNER_TEMP/AI-Core-Field-Triage.zip"
+          unzip -l "$RUNNER_TEMP/AI-Core-Field-Triage.zip"
+          test "$(unzip -Z -1 "$RUNNER_TEMP/AI-Core-Field-Triage.zip" | wc -l)" -eq 3
+          sha256sum "$RUNNER_TEMP/AI-Core-Field-Triage.zip" > "$RUNNER_TEMP/AI-Core-Field-Triage.sha256"
+          cp "$RUNNER_TEMP/AI-Core-Field-Triage.zip" ./AI-Core-Field-Triage.zip
+          cp "$RUNNER_TEMP/AI-Core-Field-Triage.sha256" ./AI-Core-Field-Triage.sha256
+      - name: Preserve exact source mod ZIP and proof digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-core-field-triage-static-${{ github.run_id }}
+          path: |
+            AI-Core-Field-Triage.zip
+            AI-Core-Field-Triage.sha256
+          retention-days: 14
+          if-no-files-found: error

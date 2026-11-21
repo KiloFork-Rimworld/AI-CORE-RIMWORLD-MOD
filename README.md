@@ -2,6 +2,16 @@
 
 A work-in-progress RimWorld mod (repo description: "My First Rimworld Mod") by Kilo.Musician. The idea is to make colonists feel more alive: they would form memories, show richer emotions, hold conversations, react to smarter health handling, and talk to the player through an "AI God Core" device. It is aimed at RimWorld players and modders who like the concept or want to pick up an unfinished project. It is not playable yet.
 
+## First isolated RimWorld 1.6 gameplay candidate (November 21, 2026)
+
+The main legacy mod remains unplayable. A **new, separately installable XML-only first slice** has been implemented and is undergoing verification:
+
+- [AI Core: Field Triage](docs/FIRST_PLAYABLE_FIELD_TRIAGE.md), from `Playable/AI-Core-Field-Triage/`.
+- Two ordinary, billable colony medicine-production recipes with real Cloth/MedicineHerbal costs, work and skill requirements.
+- One research-gated bulk process with a vanilla tech prerequisite.
+- Offline source verifier, safe deterministic installation ZIP builder and fourteen synthetic regression tests.
+- **Not a live game certification:** this requires RimWorld 1.6 loader, workbench bill, pawn work, save and reload testing on an admitted game host. Its isolated package is the only candidate to install; do not install the Git repository root.
+
 ## Status
 
 Early prototype. Read this before expecting anything to work.

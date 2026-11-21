@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <!-- Core-game-only, ordinary bills.  Existing vanilla products are
+       deliberately reused so no fake ThingDef, texture, DLL or item class
+       can appear in a player's save.  One medicine is the starter culture. -->
+  <RecipeDef>
+    <defName>KiloAI_PrepareFieldDressing</defName>
+    <label>prepare emergency field dressings</label>
+    <description>Combine herbal medicine with clean textile stock. Spend 16 cloth and one herbal medicine to prepare two treatments. The extra medicine is paid for with real materials and pawn work.</description>
+    <jobString>Preparing emergency field dressings.</jobString>
+    <workAmount>850</workAmount>
+    <workSpeedStat>DrugProductionSpeed</workSpeedStat>
+    <workSkill>Crafting</workSkill>
+    <requiredGiverWorkType>Crafting</requiredGiverWorkType>
+    <recipeUsers>
+      <li>CraftingSpot</li>
+      <li>DrugLab</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Cloth</li>
+          </thingDefs>
+        </filter>
+        <count>16</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>MedicineHerbal</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>Cloth</li>
+        <li>MedicineHerbal</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <MedicineHerbal>2</MedicineHerbal>
+    </products>
+    <skillRequirements>
+      <li>
+        <skill>Crafting</skill>
+        <minLevel>3</minLevel>
+      </li>
+    </skillRequirements>
+  </RecipeDef>
+
+  <!-- Research is a meaningful production upgrade, not a free item grant. -->
+  <RecipeDef>
+    <defName>KiloAI_BulkFieldDressings</defName>
+    <label>prepare bulk field dressings</label>
+    <description>At a drug lab, spend 40 cloth and three herbal medicine to assemble six treatments after researching field triage protocols. Higher throughput requires skill, time and an established lab.</description>
+    <jobString>Assembling bulk field dressings.</jobString>
+    <workAmount>1850</workAmount>
+    <workSpeedStat>DrugProductionSpeed</workSpeedStat>
+    <workSkill>Crafting</workSkill>
+    <requiredGiverWorkType>Crafting</requiredGiverWorkType>
+    <recipeUsers>
+      <li>DrugLab</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Cloth</li>
+          </thingDefs>
+        </filter>
+        <count>40</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>MedicineHerbal</li>
+          </thingDefs>
+        </filter>
+        <count>3</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>Cloth</li>
+        <li>MedicineHerbal</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <MedicineHerbal>6</MedicineHerbal>
+    </products>
+    <researchPrerequisite>KiloAI_FieldTriageNetwork</researchPrerequisite>
+    <skillRequirements>
+      <li>
+        <skill>Crafting</skill>
+        <minLevel>6</minLevel>
+      </li>
+    </skillRequirements>
+  </RecipeDef>
+</Defs>
