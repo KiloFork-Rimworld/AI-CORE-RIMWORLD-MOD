@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>AI Core: Colony Triage Board</name>
+  <author>Kilo.Musician</author>
+  <packageId>kilomusician.aicore.triageboard</packageId>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <description>A read-only colony medical overview. Opens a dedicated game tab, inspects living spawned player colonists' current health percentage, bleeding and downed status, and ranks those needing review. It does NOT assign doctors, override RimWorld's medical AI, issue orders, change hediffs, touch saves, call network models, or simulate a diagnosis. Built for RimWorld 1.6. Requires its included native compiled DLL.</description>
+</ModMetaData>
