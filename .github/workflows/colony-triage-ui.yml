@@ -1,0 +1,81 @@
+name: RimWorld real CSharp triage UI
+
+on:
+  pull_request:
+    paths:
+      - 'Playable/AI-Core-Triage-Board/**'
+      - '.github/workflows/colony-triage-ui.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SOURCE_HEAD: '${{ github.event.pull_request.head.sha || github.sha }}'
+
+jobs:
+  actual-game-reference-compile:
+    name: Real RimWorld 1.6 reference build + deterministic triage behavior
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: '${{ github.event.pull_request.head.sha || github.sha }}'
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pin the exact proposed source
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_HEAD"
+      - name: Run actual independent CSharp scoring logic
+        run: |
+          set -euo pipefail
+          dotnet run -c Release --project Playable/AI-Core-Triage-Board/Tests/TriageRules.Smoke/TriageRules.Smoke.csproj | tee triage-rules.log
+          grep -E '^RIMWORLD_TRIAGE_RULES_OK [(][0-9]+ assertions[)]' triage-rules.log
+      - name: Compile actual game-facing MainTabWindow against RimWorld references
+        run: |
+          set -euo pipefail
+          dotnet build -c Release Playable/AI-Core-Triage-Board/Source/TriageBoard/TriageBoard.csproj --nologo -warnaserror
+      - name: Package only native actual DLL, XML metadata and tab definition
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import zipfile
+          from pathlib import Path
+          from xml.etree import ElementTree as ET
+          root = Path("Playable/AI-Core-Triage-Board")
+          entries = ["About/About.xml", "Defs/MainButtonDefs/ColonyTriage.xml",
+                     "1.6/Assemblies/KiloAI.ColonyTriage.dll"]
+          about = ET.parse(root / entries[0]).getroot()
+          assert about.tag == "ModMetaData"
+          assert about.findtext("packageId") == "kilomusician.aicore.triageboard"
+          assert [v.text for v in about.findall("supportedVersions/li")] == ["1.6"]
+          defs = ET.parse(root / entries[1]).getroot()
+          button = defs.find("MainButtonDef")
+          assert button is not None and button.findtext("defName") == "KiloAI_ColonyTriage"
+          assert button.findtext("tabWindowClass") == "KiloAI.ColonyTriage.MainTabWindow_ColonyTriage"
+          assembly = (root / entries[2]).read_bytes()
+          assert assembly[:2] == b"MZ" and len(assembly) > 4096, "real .NET DLL required"
+          with zipfile.ZipFile("AI-Core-Triage-Board.zip", "w") as z:
+              for rel in entries:
+                  info = zipfile.ZipInfo("AI-Core-Triage-Board/" + rel,
+                                         date_time=(1980, 1, 1, 0, 0, 0))
+                  info.compress_type = zipfile.ZIP_DEFLATED
+                  z.writestr(info, (root / rel).read_bytes())
+          print("RIMWORLD_TRIAGE_NATIVE_SOURCE_PACKAGE_OK", len(assembly),
+                hashlib.sha256(Path("AI-Core-Triage-Board.zip").read_bytes()).hexdigest())
+          PY
+      - name: Preserve exact-native build for disposable game test
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-core-triage-native-${{ github.run_id }}
+          path: |
+            AI-Core-Triage-Board.zip
+            triage-rules.log
+          retention-days: 14
+          if-no-files-found: error
