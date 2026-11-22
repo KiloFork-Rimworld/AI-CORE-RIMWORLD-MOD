@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <MainButtonDef>
+    <defName>KiloAI_ColonyTriage</defName>
+    <label>colony triage</label>
+    <description>Read-only overview of health and bleeding for living colonists in the current map. Your regular medical jobs and priorities remain fully under your control.</description>
+    <tabWindowClass>KiloAI.ColonyTriage.MainTabWindow_ColonyTriage</tabWindowClass>
+    <order>72</order>
+    <iconPath>UI/Buttons/MainButtons/IconAssign</iconPath>
+  </MainButtonDef>
+</Defs>
